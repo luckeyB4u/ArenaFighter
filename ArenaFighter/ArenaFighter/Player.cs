@@ -28,7 +28,8 @@ namespace ArenaFighter
         int airDirection;
         int airSpeed;
         int maxJumpHeight;
-        double gravity;
+        float rotationSpeed;
+
 
         public Player(Game1 g)
         {
@@ -43,11 +44,11 @@ namespace ArenaFighter
             myModel = game.Content.Load<Model>("Models/player");
             aspectRatio = game.aspectRatio;
 
-            speedMultiplier = 5;
+            speedMultiplier = 7;
             isInAir = false;
-            airSpeed = 10;
-            gravity = 0.66;
-            maxJumpHeight = 200;
+            airSpeed = 15;
+            maxJumpHeight = 175;
+            rotationSpeed = MathHelper.ToRadians(3);
 
         }
 
@@ -85,10 +86,22 @@ namespace ArenaFighter
                 speed.X = 1;
             }
 
-            // Jumping
+            // Space Key for Jumping
             if (newState.IsKeyDown(Keys.Space) && !isInAir)
             {
                 jump();
+            }
+
+            // Right key for rotating right
+            if (newState.IsKeyDown(Keys.Right))
+            {
+                rotationPhi -= rotationSpeed;
+            }
+
+            // Left key for rotating left
+            if (newState.IsKeyDown(Keys.Left))
+            {
+                rotationPhi += rotationSpeed;
             }
 
             updateJump();
