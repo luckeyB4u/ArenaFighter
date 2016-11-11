@@ -13,8 +13,9 @@ namespace ArenaFighter
     class Player
     {
         Vector3 location;
-        Vector3 speed;
+        Vector2 speed;
         Vector3 cameraOffset;
+        float camRotation;
         float camRotationSensitivity = 0.01f;
 
         float rotationTheta;
@@ -38,8 +39,9 @@ namespace ArenaFighter
         public Player(Game1 g)
         {
             location = new Vector3(-650, 0, 650);
-            speed = Vector3.Zero;
-            cameraOffset = new Vector3(0.0f, 1000.0f, 2000.0f);
+            speed = Vector2.Zero;
+            cameraOffset = new Vector3(0.0f, 800.0f, 1500.0f);
+            camRotation = 0.0f;
 
             rotationTheta = 0.0f;
             rotationPhi = 0.0f;
@@ -61,6 +63,14 @@ namespace ArenaFighter
 
         }
 
+        public Vector2 rotateVect(Vector2 vect, float degrees)
+        {
+            Vector2 result = Vector2.Zero;
+            result.X = vect.X * (float)Math.Cos(degrees) - vect.Y * (float)Math.Sin(degrees);
+            result.Y = vect.X * (float)Math.Sin(degrees) + vect.Y * (float)Math.Cos(degrees);
+            return result;
+        }
+
         public void rotateCamera(float distance)
         {
             //rotates the camera offset vector on the XZ-plane based on how much
@@ -70,39 +80,61 @@ namespace ArenaFighter
             float degrees = distance * camRotationSensitivity;
             cameraOffset.X = currentX * (float)Math.Cos(degrees) - currentZ * (float)Math.Sin(degrees);
             cameraOffset.Z = currentX * (float)Math.Sin(degrees) + currentZ * (float)Math.Cos(degrees);
+            camRotation += degrees;
         }
 
         KeyboardState oldState = Keyboard.GetState();
 
         public void Update(GameTime gameTime)
         {
-            location += speed * speedMultiplier;
+            location.X += rotateVect(speed, camRotation).X * speedMultiplier;
+            location.Z += rotateVect(speed, camRotation).Y * speedMultiplier;
 
-            //currently don't need oldstate/newstate stuff but left it in case
-            //we need it later
             KeyboardState newState = Keyboard.GetState();
 
             //WASD movement on the XZ-plane
             if (newState.IsKeyDown(Keys.W))
             {
-                speed.Z = -1;
+                rotationPhi = -camRotation;
+                speed.Y = -1;
             }
             if (newState.IsKeyDown(Keys.A))
             {
+                rotationPhi = -camRotation + (float)Math.PI / 2;
                 speed.X = -1;
             }
             if (newState.IsKeyDown(Keys.S))
             {
-                speed.Z = 1;
+                rotationPhi = -camRotation + (float)Math.PI;
+                speed.Y = 1;
             }
             if (newState.IsKeyDown(Keys.D))
             {
+                rotationPhi = -camRotation - (float)Math.PI / 2;
                 speed.X = 1;
+            }
+
+            //Orients player correctly in case multiple buttons pressed
+            if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.A))
+            {
+                rotationPhi = -camRotation + (float)Math.PI / 4;
+            }
+            if (newState.IsKeyDown(Keys.A) && newState.IsKeyDown(Keys.S))
+            {
+                rotationPhi = -camRotation + (float)Math.PI * 3 / 4;
+            }
+            if (newState.IsKeyDown(Keys.S) && newState.IsKeyDown(Keys.D))
+            {
+                rotationPhi = -camRotation - (float)Math.PI * 3 / 4;
+            }
+            if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.D))
+            {
+                rotationPhi = -camRotation - (float)Math.PI / 4;
             }
 
             //Returns speeds to 0 if no keys pressed
             if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S))
-                speed.Z = 0;
+                speed.Y = 0;
             if (newState.IsKeyUp(Keys.A) && newState.IsKeyUp(Keys.D))
                 speed.X = 0;
 
