@@ -31,6 +31,11 @@ namespace ArenaFighter
             aspectRatio = game.aspectRatio;
         }
 
+        public Vector3 getLocation()
+        {
+            return location;
+        }
+
         public void Update(GameTime gameTime)
         {
             location += speed;

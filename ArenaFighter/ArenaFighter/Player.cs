@@ -33,7 +33,12 @@ namespace ArenaFighter
         int maxJumpHeight;
         float rotationSpeed;
 
+        int health;
+        Boolean prevCollided;
+
         private SoundEffect jumpSound;
+
+        KeyboardState oldState = Keyboard.GetState();
 
 
         public Player(Game1 g)
@@ -58,9 +63,26 @@ namespace ArenaFighter
             // Speed and rotation
             speedMultiplier = 7;
             rotationSpeed = MathHelper.ToRadians(3);
+            health = 200;
+            prevCollided = false;
 
             jumpSound = game.Content.Load<SoundEffect>(GameConstants.JUMP_SOUND);
 
+        }
+
+        public int getHealth()
+        {
+            return health;
+        }
+
+        public Boolean isCollision(Vector3 loc)
+        {
+            Vector3 dist = location - loc;
+            if (dist.Length() < 100)
+            {
+                return true;
+            }
+            return false;
         }
 
         public Vector2 rotateVect(Vector2 vect, float degrees)
@@ -83,10 +105,19 @@ namespace ArenaFighter
             camRotation += degrees;
         }
 
-        KeyboardState oldState = Keyboard.GetState();
-
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, BasicEnemy enemy)
         {
+            //Collision detection with enemy
+            if(isCollision(enemy.getLocation()) && !prevCollided)
+            {
+                health -= 20;
+                prevCollided = true;
+            }
+            else if(!isCollision(enemy.getLocation()))
+            {
+                prevCollided = false;
+            }
+
             //Collision detection for walls, moves player if not touching wall
             float newLocX = location.X + rotateVect(speed, camRotation).X * speedMultiplier;
             float newLocZ = location.Z + rotateVect(speed, camRotation).Y * speedMultiplier;
