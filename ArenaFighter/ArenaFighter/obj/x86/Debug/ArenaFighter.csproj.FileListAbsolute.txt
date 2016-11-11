@@ -56,3 +56,4 @@ C:\Users\Kyle\Documents\GitHub\ArenaFighter\ArenaFighter\ArenaFighter\bin\Window
 C:\Users\Kyle\Documents\GitHub\ArenaFighter\ArenaFighter\ArenaFighter\obj\x86\Debug\ArenaFighter.csprojResolveAssemblyReference.cache
 C:\Users\Kyle\Documents\GitHub\ArenaFighter\ArenaFighter\ArenaFighter\bin\Windows\x86\Debug\Content\SoundFX\jump.wma
 C:\Users\Kyle\Documents\GitHub\ArenaFighter\ArenaFighter\ArenaFighter\bin\Windows\x86\Debug\Content\SoundFX\jump.xnb
+C:\Users\Kyle\Documents\GitHub\ArenaFighter\ArenaFighter\ArenaFighter\bin\Windows\x86\Debug\Content\text.xnb

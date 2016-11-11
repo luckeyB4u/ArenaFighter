@@ -34,6 +34,8 @@ namespace ArenaFighter
         public void Update(GameTime gameTime)
         {
             location += speed;
+
+            rotationPhi += MathHelper.ToRadians(1);
         }
 
         public void Draw()

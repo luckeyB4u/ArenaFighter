@@ -3,7 +3,7 @@
   <SourceFile>C:/Users/Kyle/Documents/GitHub/ArenaFighter/ArenaFighter/ArenaFighter/Content/SoundFX/jump.mp3</SourceFile>
   <SourceTime>2014-10-22T11:39:30.3250302-04:00</SourceTime>
   <DestFile>C:/Users/Kyle/Documents/GitHub/ArenaFighter/ArenaFighter/ArenaFighter/Content/bin/Windows/SoundFX/jump.xnb</DestFile>
-  <DestTime>2016-11-10T21:27:51.5957521-05:00</DestTime>
+  <DestTime>2016-11-10T21:52:30.3043293-05:00</DestTime>
   <Importer>Mp3Importer</Importer>
   <ImporterTime>2016-03-30T02:36:08-04:00</ImporterTime>
   <Processor>SoundEffectProcessor</Processor>

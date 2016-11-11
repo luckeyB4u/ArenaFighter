@@ -57,3 +57,9 @@
 /processorParam:Quality=Best
 /build:SoundFX\jump.mp3
 
+#begin text.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:text.spritefont
+

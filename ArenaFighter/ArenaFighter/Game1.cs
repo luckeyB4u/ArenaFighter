@@ -21,6 +21,8 @@ namespace ArenaFighter
         public Vector3 cameraPosition = new Vector3(0.0f, 200.0f, 5000.0f);
         public Vector3 cameraTarget = Vector3.Zero;
 
+        SpriteFont spriteFont;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -55,6 +57,9 @@ namespace ArenaFighter
             player = new Player(this);
             enemy = new BasicEnemy(this);
             arena = new Arena(this);
+
+            spriteFont = Content.Load<SpriteFont>("text");
+
         }
 
         MouseState oldState = Mouse.GetState();
@@ -100,6 +105,16 @@ namespace ArenaFighter
             player.Draw();
             enemy.Draw();
             arena.Draw();
+
+            // Write text to the screen
+            spriteBatch.Begin();
+            spriteBatch.DrawString(spriteFont, "Battle of the Boxes", new Vector2(300, 20), Color.White);
+            spriteBatch.End();
+
+            // Dont touch this stuff. These reset some problems that come out of writing text on the screen
+            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             base.Draw(gameTime);
         }
