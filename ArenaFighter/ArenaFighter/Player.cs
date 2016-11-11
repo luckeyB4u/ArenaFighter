@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace ArenaFighter
 {
@@ -30,6 +31,8 @@ namespace ArenaFighter
         int maxJumpHeight;
         float rotationSpeed;
 
+        private SoundEffect jumpSound;
+
 
         public Player(Game1 g)
         {
@@ -49,6 +52,7 @@ namespace ArenaFighter
             airSpeed = 15;
             maxJumpHeight = 175;
             rotationSpeed = MathHelper.ToRadians(3);
+            jumpSound = game.Content.Load<SoundEffect>("SoundFX/jump");
 
         }
 
@@ -154,6 +158,7 @@ namespace ArenaFighter
                 isInAir = true;
                 airDirection = GameConstants.JUMP_UP;
             }
+            jumpSound.Play(.005f,0f,0f);
         }
 
         public void updateJump()
@@ -177,5 +182,7 @@ namespace ArenaFighter
                 airSpeed = 10;
             }
         }
+
+
     }
 }
