@@ -87,8 +87,17 @@ namespace ArenaFighter
 
         public void Update(GameTime gameTime)
         {
-            location.X += rotateVect(speed, camRotation).X * speedMultiplier;
-            location.Z += rotateVect(speed, camRotation).Y * speedMultiplier;
+            //Collision detection for walls, moves player if not touching wall
+            float newLocX = location.X + rotateVect(speed, camRotation).X * speedMultiplier;
+            float newLocZ = location.Z + rotateVect(speed, camRotation).Y * speedMultiplier;
+            if ((newLocX < 850) && (newLocX > -850))
+            {
+                location.X = newLocX;
+            }
+            if ((newLocZ < 850) && (newLocZ > -850))
+            {
+                location.Z = newLocZ;
+            }
 
             KeyboardState newState = Keyboard.GetState();
 
