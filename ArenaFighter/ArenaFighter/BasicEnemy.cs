@@ -27,7 +27,7 @@ namespace ArenaFighter
             rotationTheta = 0.0f;
             rotationPhi = 0.0f;
             game = g;
-            myModel = game.Content.Load<Model>("Models/player");
+            myModel = game.Content.Load<Model>(GameConstants.ENEMY_MODEL);
             aspectRatio = game.aspectRatio;
         }
 

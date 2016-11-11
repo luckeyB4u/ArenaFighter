@@ -20,7 +20,7 @@ namespace ArenaFighter
         {
             location = Vector3.Zero;
             game = g;
-            myModel = game.Content.Load<Model>("Models/arena");
+            myModel = game.Content.Load<Model>(GameConstants.ARENA_MODEL);
             aspectRatio = game.aspectRatio;
         }
 

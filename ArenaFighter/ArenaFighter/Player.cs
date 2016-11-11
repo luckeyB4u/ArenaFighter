@@ -44,15 +44,19 @@ namespace ArenaFighter
             rotationPhi = 0.0f;
 
             game = g;
-            myModel = game.Content.Load<Model>("Models/player");
+            myModel = game.Content.Load<Model>(GameConstants.PLAYER_MODEL);
             aspectRatio = game.aspectRatio;
 
-            speedMultiplier = 7;
+            // Jumping
             isInAir = false;
             airSpeed = 15;
             maxJumpHeight = 175;
+
+            // Speed and rotation
+            speedMultiplier = 7;
             rotationSpeed = MathHelper.ToRadians(3);
-            jumpSound = game.Content.Load<SoundEffect>("SoundFX/jump");
+
+            jumpSound = game.Content.Load<SoundEffect>(GameConstants.JUMP_SOUND);
 
         }
 
@@ -156,25 +160,29 @@ namespace ArenaFighter
             if (isInAir == false)
             {
                 isInAir = true;
-                airDirection = GameConstants.JUMP_UP;
+                airDirection = GameConstants.JUMP_UP; //change direction of movement to upwards
             }
             jumpSound.Play(.005f,0f,0f);
         }
 
         public void updateJump()
         {
+            // exit the function if the box isnt even in the air
             if (!isInAir)
             {
                 return;
             }
 
+            // change direction if the box reaches the max height
             if (location.Y >= maxJumpHeight)
             {
                 airDirection = GameConstants.JUMP_DOWN;
             }
 
+            // change location of the box in a certain direction
             location.Y += airSpeed * airDirection;
 
+            //put the box back on the ground if it goes on or below the ground
             if (location.Y <= 0)
             {
                 location.Y = 0;
