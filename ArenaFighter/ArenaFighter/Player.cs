@@ -15,6 +15,7 @@ namespace ArenaFighter
         Vector3 location;
         Vector3 speed;
         Vector3 cameraOffset;
+        float camRotationSensitivity = 0.01f;
 
         float rotationTheta;
         float rotationPhi;
@@ -58,6 +59,17 @@ namespace ArenaFighter
 
             jumpSound = game.Content.Load<SoundEffect>(GameConstants.JUMP_SOUND);
 
+        }
+
+        public void rotateCamera(float distance)
+        {
+            //rotates the camera offset vector on the XZ-plane based on how much
+            //the mouse moved and the sensitivity
+            float currentX = cameraOffset.X;
+            float currentZ = cameraOffset.Z;
+            float degrees = distance * camRotationSensitivity;
+            cameraOffset.X = currentX * (float)Math.Cos(degrees) - currentZ * (float)Math.Sin(degrees);
+            cameraOffset.Z = currentX * (float)Math.Sin(degrees) + currentZ * (float)Math.Cos(degrees);
         }
 
         KeyboardState oldState = Keyboard.GetState();

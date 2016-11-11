@@ -88,6 +88,11 @@ namespace ArenaFighter
 
             MouseState newState = Mouse.GetState();
             //TODO: Put mouse updates that need to happen here
+            if (newState.LeftButton == ButtonState.Pressed)
+            {
+                float distanceTraveled = newState.Position.X - oldState.Position.X;
+                player.rotateCamera(distanceTraveled);
+            }
             oldState = newState;
 
             base.Update(gameTime);

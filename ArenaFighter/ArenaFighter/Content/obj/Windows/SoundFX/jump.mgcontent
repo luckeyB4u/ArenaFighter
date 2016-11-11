@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Kyle/Documents/GitHub/ArenaFighter/ArenaFighter/ArenaFighter/Content/SoundFX/jump.mp3</SourceFile>
-  <SourceTime>2014-10-22T11:39:30.3250302-04:00</SourceTime>
-  <DestFile>C:/Users/Kyle/Documents/GitHub/ArenaFighter/ArenaFighter/ArenaFighter/Content/bin/Windows/SoundFX/jump.xnb</DestFile>
-  <DestTime>2016-11-10T21:52:30.3043293-05:00</DestTime>
+  <SourceFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/SoundFX/jump.mp3</SourceFile>
+  <SourceTime>2016-11-10T22:26:32.3704009-05:00</SourceTime>
+  <DestFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/bin/Windows/SoundFX/jump.xnb</DestFile>
+  <DestTime>2016-11-10T22:29:17.5264009-05:00</DestTime>
   <Importer>Mp3Importer</Importer>
   <ImporterTime>2016-03-30T02:36:08-04:00</ImporterTime>
   <Processor>SoundEffectProcessor</Processor>
