@@ -82,28 +82,38 @@ namespace ArenaFighter
             //we need it later
             KeyboardState newState = Keyboard.GetState();
 
-            // Is the W key down?
+            //WASD movement on the XZ-plane
             if (newState.IsKeyDown(Keys.W))
             {
                 speed.Z = -1;
             }
-
-            // Is the A key down?
             if (newState.IsKeyDown(Keys.A))
             {
                 speed.X = -1;
             }
-
-            // Is the S key down?
             if (newState.IsKeyDown(Keys.S))
             {
                 speed.Z = 1;
             }
-
-            // Is the D key down?
             if (newState.IsKeyDown(Keys.D))
             {
                 speed.X = 1;
+            }
+
+            //Returns speeds to 0 if no keys pressed
+            if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S))
+                speed.Z = 0;
+            if (newState.IsKeyUp(Keys.A) && newState.IsKeyUp(Keys.D))
+                speed.X = 0;
+
+            //Zooms in and out with Q/E keys
+            if(newState.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
+            {
+                cameraOffset *= 0.9f;
+            }
+            if (newState.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
+            {
+                cameraOffset *= 1.1f;
             }
 
             // Space Key for Jumping
@@ -125,12 +135,6 @@ namespace ArenaFighter
             }
 
             updateJump();
-
-            //Returns speeds to 0 if no keys pressed
-            if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S))
-                speed.Z = 0;
-            if (newState.IsKeyUp(Keys.A) && newState.IsKeyUp(Keys.D))
-                speed.X = 0;
 
             oldState = newState;
         }
