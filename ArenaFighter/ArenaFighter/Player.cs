@@ -14,29 +14,48 @@ namespace ArenaFighter
         Vector3 location;
         Vector3 speed;
         Vector3 cameraOffset;
+
         float rotationTheta;
         float rotationPhi;
+
         Game1 game;
         Model myModel;
         float aspectRatio;
-        
+
+        int speedMultiplier;
+
+        Boolean isInAir;
+        int airDirection;
+        int airSpeed;
+        int maxJumpHeight;
+        double gravity;
+
         public Player(Game1 g)
         {
             location = new Vector3(-650, 0, 650);
             speed = Vector3.Zero;
             cameraOffset = new Vector3(0.0f, 1000.0f, 2000.0f);
+
             rotationTheta = 0.0f;
             rotationPhi = 0.0f;
+
             game = g;
             myModel = game.Content.Load<Model>("Models/player");
             aspectRatio = game.aspectRatio;
+
+            speedMultiplier = 5;
+            isInAir = false;
+            airSpeed = 10;
+            gravity = 0.66;
+            maxJumpHeight = 200;
+
         }
 
         KeyboardState oldState = Keyboard.GetState();
 
         public void Update(GameTime gameTime)
         {
-            location += speed;
+            location += speed * speedMultiplier;
 
             //currently don't need oldstate/newstate stuff but left it in case
             //we need it later
@@ -65,6 +84,14 @@ namespace ArenaFighter
             {
                 speed.X = 1;
             }
+
+            // Jumping
+            if (newState.IsKeyDown(Keys.Space) && !isInAir)
+            {
+                jump();
+            }
+
+            updateJump();
 
             //Returns speeds to 0 if no keys pressed
             if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S))
@@ -107,5 +134,35 @@ namespace ArenaFighter
 
         }
 
+        public void jump()
+        {
+            if (isInAir == false)
+            {
+                isInAir = true;
+                airDirection = GameConstants.JUMP_UP;
+            }
+        }
+
+        public void updateJump()
+        {
+            if (!isInAir)
+            {
+                return;
+            }
+
+            if (location.Y >= maxJumpHeight)
+            {
+                airDirection = GameConstants.JUMP_DOWN;
+            }
+
+            location.Y += airSpeed * airDirection;
+
+            if (location.Y <= 0)
+            {
+                location.Y = 0;
+                isInAir = false;
+                airSpeed = 10;
+            }
+        }
     }
 }

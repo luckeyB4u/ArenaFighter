@@ -41,6 +41,7 @@
     <Compile Include="Arena.cs" />
     <Compile Include="BasicEnemy.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GameConstants.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
