@@ -10,7 +10,7 @@ namespace ArenaFighter
     {
         // models
         public static string PLAYER_MODEL = "Models/bluebox";
-        public static string ENEMY_MODEL = "Models/redbox";
+        public static string ENEMY_MODEL = "Models/ZombieEnemy";
         public static string ARENA_MODEL = "Models/arena";
 
         // sounds
