@@ -9,7 +9,7 @@ namespace ArenaFighter
     class GameConstants
     {
         // models
-        public static string PLAYER_MODEL = "Models/bluebox";
+        public static string PLAYER_MODEL = "Models/alienplayer";
         public static string ENEMY_MODEL = "Models/ZombieEnemy";
         public static string ARENA_MODEL = "Models/arena";
 
