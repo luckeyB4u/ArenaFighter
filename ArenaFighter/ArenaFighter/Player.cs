@@ -14,6 +14,7 @@ namespace ArenaFighter
     {
         Vector3 location;
         Vector2 speed;
+
         Vector3 cameraOffset;
         float camRotation;
         float camRotationSensitivity = 0.01f;
