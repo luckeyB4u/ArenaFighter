@@ -36,13 +36,16 @@ namespace ArenaFighter
 
         int health;
         Boolean prevCollided;
+        GraphicsDeviceManager graphics;
+
+        Healthbar healthbar;
 
         private SoundEffect jumpSound;
 
         KeyboardState oldState = Keyboard.GetState();
 
 
-        public Player(Game1 g)
+        public Player(Game1 g, GraphicsDeviceManager graph)
         {
             location = new Vector3(0, 0, 1000);
             speed = Vector2.Zero;
@@ -68,6 +71,10 @@ namespace ArenaFighter
             prevCollided = false;
 
             jumpSound = game.Content.Load<SoundEffect>(GameConstants.JUMP_SOUND);
+
+            graphics = graph;
+
+            //healthbar = new ArenaFighter.Healthbar(g, graphics, health, new Vector2(0, 0));
 
         }
 
@@ -106,7 +113,7 @@ namespace ArenaFighter
             camRotation += degrees;
         }
 
-        public void Update(GameTime gameTime, BasicEnemy enemy)
+        public void Update(GameTime gameTime, BasicEnemy enemy, SpriteBatch sprite)
         {
             //Collision detection with enemy
             if(isCollision(enemy.getLocation()) && !prevCollided)
@@ -210,6 +217,8 @@ namespace ArenaFighter
             updateJump();
 
             oldState = newState;
+
+            //healthbar.Draw(sprite, graphics.GraphicsDevice);
         }
 
         public void Draw()

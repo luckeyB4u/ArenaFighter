@@ -51,7 +51,8 @@ namespace ArenaFighter
             //Draws rectangles to depict the healthbar
             spriteBatch.Begin();
             spriteBatch.Draw(healthRect, healthbarLoc, Color.LawnGreen);
-            spriteBatch.Draw(damageRect, new Vector2(healthbarLoc.X + maxHealth - currentHealth, healthbarLoc.Y), Color.Red);
+            if(currentHealth != maxHealth)
+                spriteBatch.Draw(damageRect, new Vector2(healthbarLoc.X + maxHealth - currentHealth, healthbarLoc.Y), Color.Red);
             spriteBatch.End();
 
             // Dont touch this stuff. These reset some problems that come out of writing text on the screen

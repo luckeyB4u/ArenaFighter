@@ -61,7 +61,7 @@ namespace ArenaFighter
             aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
 
             // TODO: use this.Content to load your game content here
-            player = new Player(this);
+            player = new Player(this, graphics);
             enemy = new BasicEnemy(this);
             arena = new Arena(this);
             gameOver = false;
@@ -96,7 +96,7 @@ namespace ArenaFighter
                 {
 
                 }
-                player.Update(gameTime, enemy);
+                player.Update(gameTime, enemy, spriteBatch);
                 enemy.Update(gameTime);
 
                 MouseState newState = Mouse.GetState();
@@ -146,7 +146,7 @@ namespace ArenaFighter
             {
                 spriteBatch.DrawString(spriteFont, "Game over!", new Vector2(345, 150), Color.White);
             }
-            spriteBatch.Draw(rect1, coor1, Color.LawnGreen);
+/*            spriteBatch.Draw(rect1, coor1, Color.LawnGreen);
             //Draws red rectangle for damage if necessary
             if(player.getHealth() != 200)
             {
@@ -158,8 +158,8 @@ namespace ArenaFighter
 
                 Vector2 coor2 = new Vector2(player.getHealth(), 20);
                 spriteBatch.Draw(rect2, coor2, Color.Red);
-            }
-            spriteBatch.End();
+            }*/
+            spriteBatch.End(); 
 
             // Dont touch this stuff. These reset some problems that come out of writing text on the screen
             GraphicsDevice.BlendState = BlendState.Opaque;

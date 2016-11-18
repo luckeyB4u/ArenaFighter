@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/alienplayer.fbx</SourceFile>
-  <SourceTime>2016-11-11T21:54:33.9524019-05:00</SourceTime>
-  <DestFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/bin/Windows/Models/alienplayer.xnb</DestFile>
-  <DestTime>2016-11-18T00:06:45.0082067-05:00</DestTime>
+  <SourceFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/alienPlayer.fbx</SourceFile>
+  <SourceTime>2016-11-18T03:44:02.6596086-05:00</SourceTime>
+  <DestFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/bin/Windows/Models/alienPlayer.xnb</DestFile>
+  <DestTime>2016-11-18T03:45:01.463809-05:00</DestTime>
   <Importer>FbxImporter</Importer>
   <ImporterTime>2016-03-30T02:36:08-04:00</ImporterTime>
   <Processor>ModelProcessor</Processor>
