@@ -129,12 +129,10 @@ namespace ArenaFighter
             //Collision detection for walls, moves player if not touching wall
             float newLocX = location.X + rotateVect(speed, camRotation).X * speedMultiplier;
             float newLocZ = location.Z + rotateVect(speed, camRotation).Y * speedMultiplier;
-            if ((newLocX < 2000) && (newLocX > -2000))
+            Vector2 newLoc = new Vector2(newLocX, newLocZ);
+            if (newLoc.Length() < 2500)
             {
                 location.X = newLocX;
-            }
-            if ((newLocZ < 2000) && (newLocZ > -2000))
-            {
                 location.Z = newLocZ;
             }
 

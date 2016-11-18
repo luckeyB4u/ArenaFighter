@@ -146,7 +146,7 @@ namespace ArenaFighter
             {
                 spriteBatch.DrawString(spriteFont, "Game over!", new Vector2(345, 150), Color.White);
             }
-/*            spriteBatch.Draw(rect1, coor1, Color.LawnGreen);
+            spriteBatch.Draw(rect1, coor1, Color.LawnGreen);
             //Draws red rectangle for damage if necessary
             if(player.getHealth() != 200)
             {
@@ -158,7 +158,7 @@ namespace ArenaFighter
 
                 Vector2 coor2 = new Vector2(player.getHealth(), 20);
                 spriteBatch.Draw(rect2, coor2, Color.Red);
-            }*/
+            }
             spriteBatch.End(); 
 
             // Dont touch this stuff. These reset some problems that come out of writing text on the screen
