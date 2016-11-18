@@ -36,16 +36,13 @@ namespace ArenaFighter
 
         int health;
         Boolean prevCollided;
-        GraphicsDeviceManager graphics;
-
-        Healthbar healthbar;
 
         private SoundEffect jumpSound;
 
         KeyboardState oldState = Keyboard.GetState();
 
 
-        public Player(Game1 g, GraphicsDeviceManager graph)
+        public Player(Game1 g)
         {
             location = new Vector3(0, 0, 1000);
             speed = Vector2.Zero;
@@ -71,11 +68,6 @@ namespace ArenaFighter
             prevCollided = false;
 
             jumpSound = game.Content.Load<SoundEffect>(GameConstants.JUMP_SOUND);
-
-            graphics = graph;
-
-            //healthbar = new ArenaFighter.Healthbar(g, graphics, health, new Vector2(0, 0));
-
         }
 
         public int getHealth()
@@ -215,8 +207,6 @@ namespace ArenaFighter
             updateJump();
 
             oldState = newState;
-
-            //healthbar.Draw(sprite, graphics.GraphicsDevice);
         }
 
         public void Draw()
@@ -239,6 +229,7 @@ namespace ArenaFighter
                         * Matrix.CreateTranslation(location);
                     game.cameraPosition = location + cameraOffset;
                     game.cameraTarget = location;
+                    game.cameraTarget.Y += GameConstants.PLAYER_HEIGHT / 2;
                     effect.View = Matrix.CreateLookAt(game.cameraPosition,
                         game.cameraTarget, Vector3.Up);
                     effect.Projection = Matrix.CreatePerspectiveFieldOfView(

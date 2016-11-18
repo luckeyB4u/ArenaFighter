@@ -19,5 +19,10 @@ namespace ArenaFighter
         // movement & position
         public static int JUMP_UP = 1;
         public static int JUMP_DOWN = -1;
+
+        // character attributes
+        public static int PLAYER_INITIAL_HEALTH = 200;
+        public static int HEALTHBAR_WIDTH = 20;
+        public static int PLAYER_HEIGHT = 400;
     }
 }

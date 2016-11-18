@@ -21,6 +21,7 @@ namespace ArenaFighter
         public float aspectRatio;
 
         Player player;
+        Healthbar playerHealthbar;
         BasicEnemy enemy;
         Arena arena;
         Boolean gameOver;
@@ -61,7 +62,8 @@ namespace ArenaFighter
             aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
 
             // TODO: use this.Content to load your game content here
-            player = new Player(this, graphics);
+            player = new Player(this);
+            playerHealthbar = new Healthbar(this, graphics.GraphicsDevice, GameConstants.PLAYER_INITIAL_HEALTH, new Vector2(10.0f, 10.0f));
             enemy = new BasicEnemy(this);
             arena = new Arena(this);
             gameOver = false;
@@ -92,11 +94,9 @@ namespace ArenaFighter
 
             if(!gameOver)
             {
-                if (!gameOver)
-                {
-
-                }
                 player.Update(gameTime, enemy, spriteBatch);
+                playerHealthbar.changeHealth(player.getHealth());
+
                 enemy.Update(gameTime);
 
                 MouseState newState = Mouse.GetState();
@@ -125,19 +125,11 @@ namespace ArenaFighter
         {
             GraphicsDevice.Clear(Color.DeepSkyBlue);
 
-            //Health rectangle data
-            Texture2D rect1 = new Texture2D(graphics.GraphicsDevice, 200, 20);
-
-            Color[] data1 = new Color[200 * 20];
-            for (int i = 0; i < data1.Length; ++i) data1[i] = Color.LawnGreen;
-            rect1.SetData(data1);
-
-            Vector2 coor1 = new Vector2(0, 20);
-
             // TODO: Add your drawing code here
             player.Draw();
             enemy.Draw();
             arena.Draw();
+            playerHealthbar.Draw(spriteBatch);
 
             // Write text to the screen
             spriteBatch.Begin();
@@ -146,22 +138,9 @@ namespace ArenaFighter
             {
                 spriteBatch.DrawString(spriteFont, "Game over!", new Vector2(345, 150), Color.White);
             }
-            spriteBatch.Draw(rect1, coor1, Color.LawnGreen);
-            //Draws red rectangle for damage if necessary
-            if(player.getHealth() != 200)
-            {
-                Texture2D rect2 = new Texture2D(graphics.GraphicsDevice, 200 - player.getHealth(), 20);
-
-                Color[] data2 = new Color[(200 - player.getHealth()) * 20];
-                for (int i = 0; i < data2.Length; ++i) data2[i] = Color.Red;
-                rect2.SetData(data2);
-
-                Vector2 coor2 = new Vector2(player.getHealth(), 20);
-                spriteBatch.Draw(rect2, coor2, Color.Red);
-            }
             spriteBatch.End(); 
 
-            // Dont touch this stuff. These reset some problems that come out of writing text on the screen
+            // Don't touch this stuff. These reset some problems that come out of writing text on the screen
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
