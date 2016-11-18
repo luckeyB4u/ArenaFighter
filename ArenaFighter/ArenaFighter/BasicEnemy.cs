@@ -22,7 +22,7 @@ namespace ArenaFighter
 
         public BasicEnemy(Game1 g)
         {
-            location = new Vector3(650, 0, -650);
+            location = new Vector3(0, 0, -1000);
             speed = Vector3.Zero;
             rotationTheta = 0.0f;
             rotationPhi = 0.0f;

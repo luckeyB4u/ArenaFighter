@@ -67,7 +67,6 @@ namespace ArenaFighter
             gameOver = false;
 
             spriteFont = Content.Load<SpriteFont>("text");
-
         }
 
         MouseState oldState = Mouse.GetState();
@@ -124,7 +123,7 @@ namespace ArenaFighter
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.BlueViolet);
+            GraphicsDevice.Clear(Color.DeepSkyBlue);
 
             //Health rectangle data
             Texture2D rect1 = new Texture2D(graphics.GraphicsDevice, 200, 20);
@@ -142,7 +141,7 @@ namespace ArenaFighter
 
             // Write text to the screen
             spriteBatch.Begin();
-            spriteBatch.DrawString(spriteFont, "Battle of the Boxes", new Vector2(310, 20), Color.White);
+            spriteBatch.DrawString(spriteFont, "Battle of the Frozen Aliens", new Vector2(310, 20), Color.White);
             if(gameOver)
             {
                 spriteBatch.DrawString(spriteFont, "Game over!", new Vector2(345, 150), Color.White);

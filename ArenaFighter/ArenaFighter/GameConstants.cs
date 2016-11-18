@@ -11,7 +11,7 @@ namespace ArenaFighter
         // models
         public static string PLAYER_MODEL = "Models/alienplayer";
         public static string ENEMY_MODEL = "Models/ZombieEnemy";
-        public static string ARENA_MODEL = "Models/arena";
+        public static string ARENA_MODEL = "Models/roundArena";
 
         // sounds
         public static string JUMP_SOUND = "SoundFX/jump";

@@ -92,3 +92,4 @@ C:\Users\Corey\Desktop\VideoGame\ArenaFighter\ArenaFighter\ArenaFighter\bin\Wind
 C:\Users\Corey\Desktop\VideoGame\ArenaFighter\ArenaFighter\ArenaFighter\bin\Windows\x86\Debug\Content\Models\redbox.xnb
 C:\Users\Corey\Desktop\VideoGame\ArenaFighter\ArenaFighter\ArenaFighter\bin\Windows\x86\Debug\Content\Models\ZombieEnemy.xnb
 C:\Users\Corey\Desktop\VideoGame\ArenaFighter\ArenaFighter\ArenaFighter\bin\Windows\x86\Debug\Content\Models\alienplayer.xnb
+C:\Users\Corey\Desktop\VideoGame\ArenaFighter\ArenaFighter\ArenaFighter\bin\Windows\x86\Debug\Content\Models\roundArena.xnb

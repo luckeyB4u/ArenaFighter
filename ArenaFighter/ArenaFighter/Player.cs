@@ -44,9 +44,9 @@ namespace ArenaFighter
 
         public Player(Game1 g)
         {
-            location = new Vector3(-650, 0, 650);
+            location = new Vector3(0, 0, 1000);
             speed = Vector2.Zero;
-            cameraOffset = new Vector3(0.0f, 800.0f, 1500.0f);
+            cameraOffset = new Vector3(0.0f, 500.0f, 1500.0f);
             camRotation = 0.0f;
 
             rotationTheta = 0.0f;
@@ -122,11 +122,11 @@ namespace ArenaFighter
             //Collision detection for walls, moves player if not touching wall
             float newLocX = location.X + rotateVect(speed, camRotation).X * speedMultiplier;
             float newLocZ = location.Z + rotateVect(speed, camRotation).Y * speedMultiplier;
-            if ((newLocX < 850) && (newLocX > -850))
+            if ((newLocX < 2000) && (newLocX > -2000))
             {
                 location.X = newLocX;
             }
-            if ((newLocZ < 850) && (newLocZ > -850))
+            if ((newLocZ < 2000) && (newLocZ > -2000))
             {
                 location.Z = newLocZ;
             }
