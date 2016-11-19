@@ -11,7 +11,6 @@ namespace ArenaFighter
 {
     class BasicEnemy
     {
-
         Vector3 location;
         Vector3 speed;
         float rotationTheta;
@@ -70,8 +69,6 @@ namespace ArenaFighter
                 // Draw the mesh, using the effects set above.
                 mesh.Draw();
             }
-
         }
-
     }
 }

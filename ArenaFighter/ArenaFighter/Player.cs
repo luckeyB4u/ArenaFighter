@@ -14,33 +14,28 @@ namespace ArenaFighter
     {
         Vector3 location;
         Vector2 speed;
-
-        Vector3 cameraOffset;
-        float camRotation;
-        float camRotationSensitivity = 0.01f;
+        int health;
 
         float rotationTheta;
         float rotationPhi;
-
-        Game1 game;
-        Model myModel;
-        float aspectRatio;
-
-        int speedMultiplier;
 
         Boolean isInAir;
         int airDirection;
         int airSpeed;
         int maxJumpHeight;
-        float rotationSpeed;
-
-        int health;
-        Boolean prevCollided;
-
         private SoundEffect jumpSound;
 
-        KeyboardState oldState = Keyboard.GetState();
+        Boolean prevCollided;
 
+        Game1 game;
+        Model myModel;
+        float aspectRatio;
+
+        Vector3 cameraOffset;
+        float camRotation;
+        float camRotationSensitivity = 0.01f;
+
+        KeyboardState oldState = Keyboard.GetState();
 
         public Player(Game1 g)
         {
@@ -62,8 +57,6 @@ namespace ArenaFighter
             maxJumpHeight = 175;
 
             // Speed and rotation
-            speedMultiplier = 7;
-            rotationSpeed = MathHelper.ToRadians(3);
             health = 200;
             prevCollided = false;
 
@@ -119,8 +112,8 @@ namespace ArenaFighter
             }
 
             //Collision detection for walls, moves player if not touching wall
-            float newLocX = location.X + rotateVect(speed, camRotation).X * speedMultiplier;
-            float newLocZ = location.Z + rotateVect(speed, camRotation).Y * speedMultiplier;
+            float newLocX = location.X + rotateVect(speed, camRotation).X * GameConstants.PLAYER_SPEED;
+            float newLocZ = location.Z + rotateVect(speed, camRotation).Y * GameConstants.PLAYER_SPEED;
             Vector2 newLoc = new Vector2(newLocX, newLocZ);
             if (newLoc.Length() < 2500)
             {
@@ -190,18 +183,6 @@ namespace ArenaFighter
             if (newState.IsKeyDown(Keys.Space) && !isInAir)
             {
                 jump();
-            }
-
-            // Right key for rotating right
-            if (newState.IsKeyDown(Keys.Right))
-            {
-                rotationPhi -= rotationSpeed;
-            }
-
-            // Left key for rotating left
-            if (newState.IsKeyDown(Keys.Left))
-            {
-                rotationPhi += rotationSpeed;
             }
 
             updateJump();
@@ -277,7 +258,5 @@ namespace ArenaFighter
                 airSpeed = 10;
             }
         }
-
-
     }
 }

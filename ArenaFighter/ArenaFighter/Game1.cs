@@ -11,13 +11,13 @@ using Microsoft.Xna.Framework.Audio;
 namespace ArenaFighter
 {
     /// <summary>
-    /// This is the main type for your game.
+    /// This is the main type for your game
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
+        GraphicsDeviceManager graphicsManager;
         SpriteBatch spriteBatch;
-
+        SpriteFont spriteFont;
         public float aspectRatio;
 
         Player player;
@@ -25,15 +25,16 @@ namespace ArenaFighter
         BasicEnemy enemy;
         Arena arena;
         Boolean gameOver;
-        public Vector3 cameraPosition = new Vector3(0.0f, 200.0f, 5000.0f);
-        public Vector3 cameraTarget = Vector3.Zero;
 
-        SpriteFont spriteFont;
+        public Vector3 cameraPosition;
+        public Vector3 cameraTarget;
+
+        MouseState oldState = Mouse.GetState();
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
+            graphicsManager = new GraphicsDeviceManager(this);
+            graphicsManager.IsFullScreen = true;
             Content.RootDirectory = "Content";
         }
 
@@ -41,7 +42,7 @@ namespace ArenaFighter
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
         /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// and initialize them as well
         /// </summary>
         protected override void Initialize()
         {
@@ -52,30 +53,33 @@ namespace ArenaFighter
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// all of your content
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            // Create a new SpriteBatch, which can be used to draw textures
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteFont = Content.Load<SpriteFont>("text");
+            aspectRatio = graphicsManager.GraphicsDevice.Viewport.AspectRatio;
 
-            aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
-
-            // TODO: use this.Content to load your game content here
+            // Load your game content here
             player = new Player(this);
-            playerHealthbar = new Healthbar(this, graphics.GraphicsDevice, GameConstants.PLAYER_INITIAL_HEALTH, new Vector2(10.0f, 10.0f));
+            playerHealthbar = new Healthbar(this, graphicsManager.GraphicsDevice, GameConstants.PLAYER_INITIAL_HEALTH, GameConstants.PLAYER_HEALTHBAR_INITIAL_POSITION);
             enemy = new BasicEnemy(this);
             arena = new Arena(this);
             gameOver = false;
 
-            spriteFont = Content.Load<SpriteFont>("text");
-        }
+            // Sets up global camera variables
+            cameraPosition = GameConstants.CAMERA_INITIAL_POSITION;
+            cameraTarget = GameConstants.CAMERA_TARGET_INITIAL_POSITION;
 
-        MouseState oldState = Mouse.GetState();
+            // Initializes mouse state
+            oldState = Mouse.GetState();
+        }
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
+        /// game-specific content
         /// </summary>
         protected override void UnloadContent()
         {
@@ -84,7 +88,7 @@ namespace ArenaFighter
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
+        /// checking for collisions, gathering input, and playing audio
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
@@ -92,6 +96,7 @@ namespace ArenaFighter
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            // Main game loop
             if(!gameOver)
             {
                 player.Update(gameTime, enemy, spriteBatch);
@@ -100,7 +105,7 @@ namespace ArenaFighter
                 enemy.Update(gameTime);
 
                 MouseState newState = Mouse.GetState();
-                //TODO: Put mouse updates that need to happen here
+                // Put mouse update code here
                 if (newState.LeftButton == ButtonState.Pressed)
                 {
                     float distanceTraveled = newState.Position.X - oldState.Position.X;
@@ -118,14 +123,14 @@ namespace ArenaFighter
         }
 
         /// <summary>
-        /// This is called when the game should draw itself.
+        /// This is called when the game should draw itself
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DeepSkyBlue);
 
-            // TODO: Add your drawing code here
+            // Put drawing code here
             player.Draw();
             enemy.Draw();
             arena.Draw();
@@ -133,14 +138,14 @@ namespace ArenaFighter
 
             // Write text to the screen
             spriteBatch.Begin();
-            spriteBatch.DrawString(spriteFont, "Battle of the Frozen Aliens", new Vector2(310, 20), Color.White);
+            spriteBatch.DrawString(spriteFont, "Battle of the Frozen Aliens", new Vector2(280, 20), Color.Black);
             if(gameOver)
             {
-                spriteBatch.DrawString(spriteFont, "Game over!", new Vector2(345, 150), Color.White);
+                spriteBatch.DrawString(spriteFont, "Game over!", new Vector2(345, 150), Color.Black);
             }
             spriteBatch.End(); 
 
-            // Don't touch this stuff. These reset some problems that come out of writing text on the screen
+            // Don't touch this stuff. These reset some problems that come from writing text on the screen
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
