@@ -22,7 +22,7 @@ namespace ArenaFighter
 
         Player player;
         Healthbar playerHealthbar;
-        BasicEnemy enemy;
+        Zombie enemy;
         Arena arena;
         Boolean gameOver;
 
@@ -65,7 +65,7 @@ namespace ArenaFighter
             // Load your game content here
             player = new Player(this);
             playerHealthbar = new Healthbar(this, graphicsManager.GraphicsDevice, GameConstants.PLAYER_INITIAL_HEALTH, GameConstants.PLAYER_HEALTHBAR_INITIAL_POSITION);
-            enemy = new BasicEnemy(this);
+            enemy = new Zombie(this);
             arena = new Arena(this);
             gameOver = false;
 

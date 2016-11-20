@@ -9,25 +9,39 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ArenaFighter
 {
-    class BasicEnemy
+    class Zombie
     {
         Vector3 location;
-        Vector3 speed;
-        float rotationTheta;
-        float rotationPhi;
+        Vector3 walkDirection;
+        int health;
+
+        float rotationXAxis; // Rotates on YZ-plane
+        float rotationYAxis; // Rotates on XZ-plane (ground)
+        float rotationZAxis; // Rotates on XY-plane
+
         Game1 game;
         Model myModel;
         float aspectRatio;
 
-        public BasicEnemy(Game1 g)
+        public Zombie(Game1 g)
         {
-            location = new Vector3(0, 0, -1000);
-            speed = Vector3.Zero;
-            rotationTheta = 0.0f;
-            rotationPhi = 0.0f;
+            location = GameConstants.ZOMBIE_INITIAL_POSITION;
+            walkDirection = Vector3.Zero;
+            health = GameConstants.ZOMBIE_INITIAL_HEALTH;
+
+            rotationXAxis = 0.0f;
+            rotationYAxis = 0.0f;
+            rotationZAxis = 0.0f;
+
             game = g;
-            myModel = game.Content.Load<Model>(GameConstants.ENEMY_MODEL);
-            aspectRatio = game.aspectRatio;
+            myModel = g.Content.Load<Model>(GameConstants.ZOMBIE_MODEL);
+            aspectRatio = g.aspectRatio;
+        }
+
+        // Gets zombie's health
+        public int getHealth()
+        {
+            return health;
         }
 
         public Vector3 getLocation()
@@ -37,28 +51,33 @@ namespace ArenaFighter
 
         public void Update(GameTime gameTime)
         {
-            location += speed;
+            // Moves zombie if not touching wall
+            Vector3 newLoc = location + walkDirection * GameConstants.ZOMBIE_SPEED;
+            if (newLoc.Length() < GameConstants.ARENA_SIZE)
+            {
+                location = newLoc;
+            }
 
-            rotationPhi += MathHelper.ToRadians(1);
+            rotationYAxis += MathHelper.ToRadians(1);
         }
 
         public void Draw()
         {
-            // Copy any parent transforms.
+            // Copy any parent transforms
             Matrix[] transforms = new Matrix[myModel.Bones.Count];
             myModel.CopyAbsoluteBoneTransformsTo(transforms);
 
-            // Draw the model. A model can have multiple meshes, so loop.
+            // Draws the model. A model can have multiple meshes, so loop
             foreach (ModelMesh mesh in myModel.Meshes)
             {
                 // This is where the mesh orientation is set, as well 
-                // as our camera and projection.
+                // as our camera and projection
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
                     effect.World = transforms[mesh.ParentBone.Index] *
-                        Matrix.CreateRotationY(rotationPhi)
-                        * Matrix.CreateRotationX(rotationTheta)
+                        Matrix.CreateRotationY(rotationYAxis)
+                        * Matrix.CreateRotationX(rotationXAxis)
                         * Matrix.CreateTranslation(location);
                     effect.View = Matrix.CreateLookAt(game.cameraPosition,
                         game.cameraTarget, Vector3.Up);
@@ -66,7 +85,7 @@ namespace ArenaFighter
                         MathHelper.ToRadians(45.0f), aspectRatio,
                         1.0f, 10000.0f);
                 }
-                // Draw the mesh, using the effects set above.
+                // Draws the mesh, using the effects set above
                 mesh.Draw();
             }
         }

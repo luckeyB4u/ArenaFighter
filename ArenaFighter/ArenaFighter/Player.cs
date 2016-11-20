@@ -13,19 +13,20 @@ namespace ArenaFighter
     class Player
     {
         Vector3 location;
-        Vector2 speed;
+        Vector3 walkDirection;
         int health;
+        Boolean collidingWithEnemy;
 
-        float rotationTheta;
-        float rotationPhi;
+        float rotationXAxis; // Rotates on YZ-plane
+        float rotationYAxis; // Rotates on XZ-plane (ground)
+        float rotationZAxis; // Rotates on XY-plane
 
+        // Jumping
         Boolean isInAir;
         int airDirection;
         int airSpeed;
         int maxJumpHeight;
         private SoundEffect jumpSound;
-
-        Boolean prevCollided;
 
         Game1 game;
         Model myModel;
@@ -33,144 +34,193 @@ namespace ArenaFighter
 
         Vector3 cameraOffset;
         float camRotation;
-        float camRotationSensitivity = 0.01f;
+        float camRotationSensitivity;
 
         KeyboardState oldState = Keyboard.GetState();
 
         public Player(Game1 g)
         {
-            location = new Vector3(0, 0, 1000);
-            speed = Vector2.Zero;
-            cameraOffset = new Vector3(0.0f, 500.0f, 1500.0f);
-            camRotation = 0.0f;
+            location = GameConstants.PLAYER_INITIAL_POSITION;
+            walkDirection = Vector3.Zero;
+            health = GameConstants.PLAYER_INITIAL_HEALTH;
+            collidingWithEnemy = false;
 
-            rotationTheta = 0.0f;
-            rotationPhi = 0.0f;
+            rotationXAxis = 0.0f;
+            rotationYAxis = 0.0f;
+            rotationZAxis = 0.0f;
 
-            game = g;
-            myModel = game.Content.Load<Model>(GameConstants.PLAYER_MODEL);
-            aspectRatio = game.aspectRatio;
-
-            // Jumping
             isInAir = false;
+            airDirection = 0;
             airSpeed = 15;
             maxJumpHeight = 175;
+            jumpSound = g.Content.Load<SoundEffect>(GameConstants.JUMP_SOUND);
 
-            // Speed and rotation
-            health = 200;
-            prevCollided = false;
+            game = g;
+            myModel = g.Content.Load<Model>(GameConstants.PLAYER_MODEL);
+            aspectRatio = g.aspectRatio;
 
-            jumpSound = game.Content.Load<SoundEffect>(GameConstants.JUMP_SOUND);
+            cameraOffset = GameConstants.CAMERA_OFFSET;
+            camRotation = 0.0f;
+            camRotationSensitivity = GameConstants.CAMERA_ROTATION_SENSITIVITY;
         }
 
+        // Gets player health
         public int getHealth()
         {
             return health;
         }
 
-        public Boolean isCollision(Vector3 loc)
+        // Determines if player is inside the enemy's collision bubble
+        public Boolean isCollisionWithEnemy(Vector3 loc)
         {
             Vector3 dist = location - loc;
-            if (dist.Length() < 100)
+            if (dist.Length() < GameConstants.ZOMBIE_COLLISION_BUBBLE_SIZE)
             {
                 return true;
             }
             return false;
         }
 
-        public Vector2 rotateVect(Vector2 vect, float degrees)
+        public Vector3 rotateVectXZ(Vector3 vect, float degrees)
         {
-            Vector2 result = Vector2.Zero;
-            result.X = vect.X * (float)Math.Cos(degrees) - vect.Y * (float)Math.Sin(degrees);
-            result.Y = vect.X * (float)Math.Sin(degrees) + vect.Y * (float)Math.Cos(degrees);
+            Vector3 result = Vector3.Zero;
+            result.X = vect.X * (float)Math.Cos(degrees) - vect.Z * (float)Math.Sin(degrees);
+            result.Y = vect.Y;
+            result.Z = vect.X * (float)Math.Sin(degrees) + vect.Z * (float)Math.Cos(degrees);
             return result;
         }
 
         public void rotateCamera(float distance)
         {
-            //rotates the camera offset vector on the XZ-plane based on how much
-            //the mouse moved and the sensitivity
-            float currentX = cameraOffset.X;
-            float currentZ = cameraOffset.Z;
+            // Rotates the camera offset vector on the XZ-plane based on how much
+            // the mouse moved and the sensitivity
             float degrees = distance * camRotationSensitivity;
-            cameraOffset.X = currentX * (float)Math.Cos(degrees) - currentZ * (float)Math.Sin(degrees);
-            cameraOffset.Z = currentX * (float)Math.Sin(degrees) + currentZ * (float)Math.Cos(degrees);
+            cameraOffset = rotateVectXZ(cameraOffset, degrees);
             camRotation += degrees;
         }
 
-        public void Update(GameTime gameTime, BasicEnemy enemy, SpriteBatch sprite)
+        public void jump()
         {
-            //Collision detection with enemy
-            if(isCollision(enemy.getLocation()) && !prevCollided)
+            if (isInAir == false)
             {
-                health -= 20;
-                prevCollided = true;
+                isInAir = true;
+                airDirection = GameConstants.JUMP_UP; // Changes direction of movement to upwards
             }
-            else if(!isCollision(enemy.getLocation()))
+            jumpSound.Play(.005f, 0f, 0f);
+        }
+
+        public void updateJump()
+        {
+            // Exits the function if the box is not in the air
+            if (!isInAir)
             {
-                prevCollided = false;
+                return;
             }
 
-            //Collision detection for walls, moves player if not touching wall
-            float newLocX = location.X + rotateVect(speed, camRotation).X * GameConstants.PLAYER_SPEED;
-            float newLocZ = location.Z + rotateVect(speed, camRotation).Y * GameConstants.PLAYER_SPEED;
-            Vector2 newLoc = new Vector2(newLocX, newLocZ);
-            if (newLoc.Length() < 2500)
+            // Changes direction if the box reaches the max height
+            if (location.Y >= maxJumpHeight)
             {
-                location.X = newLocX;
-                location.Z = newLocZ;
+                airDirection = GameConstants.JUMP_DOWN;
+            }
+
+            // Changes location of the box in a certain direction
+            location.Y += airSpeed * airDirection;
+
+            // Puts the box back on the ground if it goes on or below the ground
+            if (location.Y <= 0)
+            {
+                location.Y = 0;
+                isInAir = false;
+                airSpeed = 10;
+            }
+        }
+
+        public void Update(GameTime gameTime, Zombie enemy, SpriteBatch sprite)
+        {
+            // Moves player if not touching wall
+            Vector3 newLoc = location + walkDirection * GameConstants.PLAYER_SPEED;
+            if (newLoc.Length() < GameConstants.ARENA_SIZE)
+            {
+                location = newLoc;
+            }
+
+            // Decreases player health if colliding with enemy
+            if (isCollisionWithEnemy(enemy.getLocation()) && !collidingWithEnemy)
+            {
+                health -= 20;
+                collidingWithEnemy = true;
+            }
+            else if(!isCollisionWithEnemy(enemy.getLocation()))
+            {
+                collidingWithEnemy = false;
             }
 
             KeyboardState newState = Keyboard.GetState();
 
-            //WASD movement on the XZ-plane
+            // WASD movement on the XZ-plane. Sets walk vector and player
+            // orientation as needed
             if (newState.IsKeyDown(Keys.W))
             {
-                rotationPhi = -camRotation;
-                speed.Y = -1;
+                walkDirection = GameConstants.FORWARD;
+                rotationYAxis = -camRotation;
             }
             if (newState.IsKeyDown(Keys.A))
             {
-                rotationPhi = -camRotation + (float)Math.PI / 2;
-                speed.X = -1;
+                walkDirection = GameConstants.FORWARD;
+                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI / 2);
+                rotationYAxis = -camRotation + (float)Math.PI / 2;
             }
             if (newState.IsKeyDown(Keys.S))
             {
-                rotationPhi = -camRotation + (float)Math.PI;
-                speed.Y = 1;
+                walkDirection = GameConstants.FORWARD;
+                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI);
+                rotationYAxis = -camRotation + (float)Math.PI;
             }
             if (newState.IsKeyDown(Keys.D))
             {
-                rotationPhi = -camRotation - (float)Math.PI / 2;
-                speed.X = 1;
+                walkDirection = GameConstants.FORWARD;
+                walkDirection = rotateVectXZ(walkDirection, (float)Math.PI / 2);
+                rotationYAxis = -camRotation - (float)Math.PI / 2;
             }
-
-            //Orients player correctly in case multiple buttons pressed
             if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.A))
             {
-                rotationPhi = -camRotation + (float)Math.PI / 4;
+                walkDirection = GameConstants.FORWARD;
+                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI / 4);
+                rotationYAxis = -camRotation + (float)Math.PI / 4;
             }
             if (newState.IsKeyDown(Keys.A) && newState.IsKeyDown(Keys.S))
             {
-                rotationPhi = -camRotation + (float)Math.PI * 3 / 4;
+                walkDirection = GameConstants.FORWARD;
+                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI * 3 / 4);
+                rotationYAxis = -camRotation + (float)Math.PI * 3 / 4;
             }
             if (newState.IsKeyDown(Keys.S) && newState.IsKeyDown(Keys.D))
             {
-                rotationPhi = -camRotation - (float)Math.PI * 3 / 4;
+                walkDirection = GameConstants.FORWARD;
+                walkDirection = rotateVectXZ(walkDirection, (float)Math.PI * 3 / 4);
+                rotationYAxis = -camRotation - (float)Math.PI * 3 / 4;
             }
             if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.D))
             {
-                rotationPhi = -camRotation - (float)Math.PI / 4;
+                walkDirection = GameConstants.FORWARD;
+                walkDirection = rotateVectXZ(walkDirection, (float)Math.PI / 4);
+                rotationYAxis = -camRotation - (float)Math.PI / 4;
             }
 
-            //Returns speeds to 0 if no keys pressed
+            // Returns speeds to 0 if no keys pressed
             if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S))
-                speed.Y = 0;
+            {
+                walkDirection.Z = 0;
+            }
             if (newState.IsKeyUp(Keys.A) && newState.IsKeyUp(Keys.D))
-                speed.X = 0;
+            {
+                walkDirection.X = 0;
+            }
 
-            //Zooms in and out with Q/E keys
-            if(newState.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
+            walkDirection = rotateVectXZ(walkDirection, camRotation);
+
+            // Zooms in and out with Q/E keys
+            if (newState.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
             {
                 cameraOffset *= 0.9f;
             }
@@ -179,7 +229,7 @@ namespace ArenaFighter
                 cameraOffset *= 1.1f;
             }
 
-            // Space Key for Jumping
+            // Jumps when the space key is pressed
             if (newState.IsKeyDown(Keys.Space) && !isInAir)
             {
                 jump();
@@ -192,21 +242,22 @@ namespace ArenaFighter
 
         public void Draw()
         {
-            // Copy any parent transforms.
+            // Copy any parent transforms
             Matrix[] transforms = new Matrix[myModel.Bones.Count];
             myModel.CopyAbsoluteBoneTransformsTo(transforms);
 
-            // Draw the model. A model can have multiple meshes, so loop.
+            // Draws the model. A model can have multiple meshes, so loop
             foreach (ModelMesh mesh in myModel.Meshes)
             {
                 // This is where the mesh orientation is set, as well 
-                // as our camera and projection.
+                // as our camera and projection
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
-                    effect.World = transforms[mesh.ParentBone.Index] *
-                        Matrix.CreateRotationY(rotationPhi)
-                        * Matrix.CreateRotationX(rotationTheta)
+                    effect.World = transforms[mesh.ParentBone.Index]
+                        * Matrix.CreateRotationZ(rotationZAxis)
+                        * Matrix.CreateRotationY(rotationYAxis)
+                        * Matrix.CreateRotationX(rotationXAxis)
                         * Matrix.CreateTranslation(location);
                     game.cameraPosition = location + cameraOffset;
                     game.cameraTarget = location;
@@ -217,45 +268,8 @@ namespace ArenaFighter
                         MathHelper.ToRadians(45.0f), aspectRatio,
                         1.0f, 10000.0f);
                 }
-                // Draw the mesh, using the effects set above.
+                // Draws the mesh, using the effects set above
                 mesh.Draw();
-            }
-
-        }
-
-        public void jump()
-        {
-            if (isInAir == false)
-            {
-                isInAir = true;
-                airDirection = GameConstants.JUMP_UP; //change direction of movement to upwards
-            }
-            jumpSound.Play(.005f,0f,0f);
-        }
-
-        public void updateJump()
-        {
-            // exit the function if the box isnt even in the air
-            if (!isInAir)
-            {
-                return;
-            }
-
-            // change direction if the box reaches the max height
-            if (location.Y >= maxJumpHeight)
-            {
-                airDirection = GameConstants.JUMP_DOWN;
-            }
-
-            // change location of the box in a certain direction
-            location.Y += airSpeed * airDirection;
-
-            //put the box back on the ground if it goes on or below the ground
-            if (location.Y <= 0)
-            {
-                location.Y = 0;
-                isInAir = false;
-                airSpeed = 10;
             }
         }
     }
