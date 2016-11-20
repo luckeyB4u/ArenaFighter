@@ -35,6 +35,7 @@ namespace ArenaFighter
         Vector3 cameraOffset;
         float camRotation;
         float camRotationSensitivity;
+        int zoomCount;
 
         KeyboardState oldState = Keyboard.GetState();
 
@@ -62,6 +63,7 @@ namespace ArenaFighter
             cameraOffset = GameConstants.CAMERA_OFFSET;
             camRotation = 0.0f;
             camRotationSensitivity = GameConstants.CAMERA_ROTATION_SENSITIVITY;
+            zoomCount = 0;
         }
 
         // Gets player health
@@ -81,6 +83,7 @@ namespace ArenaFighter
             return false;
         }
 
+        // Rotates a vector by an angle on the XZ-plane (ground)
         public Vector3 rotateVectXZ(Vector3 vect, float degrees)
         {
             Vector3 result = Vector3.Zero;
@@ -166,44 +169,37 @@ namespace ArenaFighter
             }
             if (newState.IsKeyDown(Keys.A))
             {
-                walkDirection = GameConstants.FORWARD;
-                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI / 2);
+                walkDirection = GameConstants.LEFT;
                 rotationYAxis = -camRotation + (float)Math.PI / 2;
             }
             if (newState.IsKeyDown(Keys.S))
             {
-                walkDirection = GameConstants.FORWARD;
-                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI);
+                walkDirection = GameConstants.BACK;
                 rotationYAxis = -camRotation + (float)Math.PI;
             }
             if (newState.IsKeyDown(Keys.D))
             {
-                walkDirection = GameConstants.FORWARD;
-                walkDirection = rotateVectXZ(walkDirection, (float)Math.PI / 2);
+                walkDirection = GameConstants.RIGHT;
                 rotationYAxis = -camRotation - (float)Math.PI / 2;
             }
             if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.A))
             {
-                walkDirection = GameConstants.FORWARD;
-                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI / 4);
+                walkDirection = Vector3.Normalize(GameConstants.FORWARD + GameConstants.LEFT);
                 rotationYAxis = -camRotation + (float)Math.PI / 4;
             }
             if (newState.IsKeyDown(Keys.A) && newState.IsKeyDown(Keys.S))
             {
-                walkDirection = GameConstants.FORWARD;
-                walkDirection = rotateVectXZ(walkDirection, -(float)Math.PI * 3 / 4);
+                walkDirection = Vector3.Normalize(GameConstants.BACK + GameConstants.LEFT);
                 rotationYAxis = -camRotation + (float)Math.PI * 3 / 4;
             }
             if (newState.IsKeyDown(Keys.S) && newState.IsKeyDown(Keys.D))
             {
-                walkDirection = GameConstants.FORWARD;
-                walkDirection = rotateVectXZ(walkDirection, (float)Math.PI * 3 / 4);
+                walkDirection = Vector3.Normalize(GameConstants.BACK + GameConstants.RIGHT);
                 rotationYAxis = -camRotation - (float)Math.PI * 3 / 4;
             }
             if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.D))
             {
-                walkDirection = GameConstants.FORWARD;
-                walkDirection = rotateVectXZ(walkDirection, (float)Math.PI / 4);
+                walkDirection = Vector3.Normalize(GameConstants.FORWARD + GameConstants.RIGHT);
                 rotationYAxis = -camRotation - (float)Math.PI / 4;
             }
 
@@ -220,13 +216,15 @@ namespace ArenaFighter
             walkDirection = rotateVectXZ(walkDirection, camRotation);
 
             // Zooms in and out with Q/E keys
-            if (newState.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E))
+            if (newState.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q) && zoomCount < 5)
             {
-                cameraOffset *= 0.9f;
-            }
-            if (newState.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q))
-            {
+                zoomCount++;
                 cameraOffset *= 1.1f;
+            }
+            if (newState.IsKeyDown(Keys.E) && oldState.IsKeyUp(Keys.E) && zoomCount > -5)
+            {
+                zoomCount--;
+                cameraOffset *= 0.9f;
             }
 
             // Jumps when the space key is pressed

@@ -38,15 +38,20 @@ namespace ArenaFighter
         public static int ZOMBIE_INITIAL_HEALTH = 200;
         public static int ZOMBIE_COLLISION_BUBBLE_SIZE = 100;
 
-        // various constants
-        public static int GRAVITY = 10;
-        public static Vector3 CAMERA_INITIAL_POSITION = new Vector3(0, 200, 5000);
-        public static Vector3 CAMERA_TARGET_INITIAL_POSITION = Vector3.Zero;
+        // walk directions
+        public static Vector3 FORWARD = new Vector3(0, 0, -1);
+        public static Vector3 BACK = new Vector3(0, 0, 1);
+        public static Vector3 LEFT = new Vector3(-1, 0, 0);
+        public static Vector3 RIGHT = new Vector3(1, 0, 0);
+
+        // camera attributes
         public static Vector3 CAMERA_OFFSET = new Vector3(0, 500, 1500);
         public static float CAMERA_ROTATION_SENSITIVITY = 0.01f;
-        public static Vector3 FORWARD = new Vector3(0, 0, -1);
+        public static float CAMERA_ZOOM_RATIO = 0.1f;
+
+        // various constants
+        public static int GRAVITY = 10;
         public static int HEALTHBAR_WIDTH = 20;
-        public static Vector3 ARENA_INITIAL_LOCATION = Vector3.Zero;
         public static int ARENA_SIZE = 2500;
     }
 }

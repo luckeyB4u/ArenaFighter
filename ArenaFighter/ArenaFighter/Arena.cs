@@ -18,7 +18,7 @@ namespace ArenaFighter
 
         public Arena(Game1 g)
         {
-            location = GameConstants.ARENA_INITIAL_LOCATION;
+            location = Vector3.Zero;
             myModel = g.Content.Load<Model>(GameConstants.ARENA_MODEL);
             game = g;
             aspectRatio = g.aspectRatio;

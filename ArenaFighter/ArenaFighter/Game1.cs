@@ -70,8 +70,8 @@ namespace ArenaFighter
             gameOver = false;
 
             // Sets up global camera variables
-            cameraPosition = GameConstants.CAMERA_INITIAL_POSITION;
-            cameraTarget = GameConstants.CAMERA_TARGET_INITIAL_POSITION;
+            cameraPosition = Vector3.Zero;
+            cameraTarget = Vector3.Zero;
 
             // Initializes mouse state
             oldState = Mouse.GetState();
