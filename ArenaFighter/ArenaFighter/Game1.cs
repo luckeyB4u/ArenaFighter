@@ -99,7 +99,7 @@ namespace ArenaFighter
             // Main game loop
             if(!gameOver)
             {
-                player.Update(gameTime, enemy, spriteBatch);
+                player.Update(gameTime, enemy);
                 playerHealthbar.changeHealth(player.getHealth());
 
                 enemy.Update(gameTime);

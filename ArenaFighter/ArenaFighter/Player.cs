@@ -138,7 +138,7 @@ namespace ArenaFighter
             }
         }
 
-        public void Update(GameTime gameTime, Zombie enemy, SpriteBatch sprite)
+        public void Update(GameTime gameTime, Zombie enemy)
         {
             // Moves player if not touching wall
             Vector3 newLoc = location + walkDirection * GameConstants.PLAYER_SPEED;
@@ -160,59 +160,51 @@ namespace ArenaFighter
 
             KeyboardState newState = Keyboard.GetState();
 
-            // WASD movement on the XZ-plane. Sets walk vector and player
-            // orientation as needed
+            //WASD movement on the XZ-plane
+            walkDirection = Vector3.Zero;
             if (newState.IsKeyDown(Keys.W))
             {
-                walkDirection = GameConstants.FORWARD;
+                walkDirection += GameConstants.FORWARD;
                 rotationYAxis = -camRotation;
             }
             if (newState.IsKeyDown(Keys.A))
             {
-                walkDirection = GameConstants.LEFT;
+                walkDirection += GameConstants.LEFT;
                 rotationYAxis = -camRotation + (float)Math.PI / 2;
             }
             if (newState.IsKeyDown(Keys.S))
             {
-                walkDirection = GameConstants.BACK;
+                walkDirection += GameConstants.BACK;
                 rotationYAxis = -camRotation + (float)Math.PI;
             }
             if (newState.IsKeyDown(Keys.D))
             {
-                walkDirection = GameConstants.RIGHT;
+                walkDirection += GameConstants.RIGHT;
                 rotationYAxis = -camRotation - (float)Math.PI / 2;
             }
             if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.A))
             {
-                walkDirection = Vector3.Normalize(GameConstants.FORWARD + GameConstants.LEFT);
                 rotationYAxis = -camRotation + (float)Math.PI / 4;
             }
             if (newState.IsKeyDown(Keys.A) && newState.IsKeyDown(Keys.S))
             {
-                walkDirection = Vector3.Normalize(GameConstants.BACK + GameConstants.LEFT);
                 rotationYAxis = -camRotation + (float)Math.PI * 3 / 4;
             }
             if (newState.IsKeyDown(Keys.S) && newState.IsKeyDown(Keys.D))
             {
-                walkDirection = Vector3.Normalize(GameConstants.BACK + GameConstants.RIGHT);
                 rotationYAxis = -camRotation - (float)Math.PI * 3 / 4;
             }
             if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.D))
             {
-                walkDirection = Vector3.Normalize(GameConstants.FORWARD + GameConstants.RIGHT);
                 rotationYAxis = -camRotation - (float)Math.PI / 4;
             }
 
-            // Returns speeds to 0 if no keys pressed
-            if (newState.IsKeyUp(Keys.W) && newState.IsKeyUp(Keys.S))
+            // Normalizes the walk direction vector then rotates it to match
+            // the camera rotation
+            if (walkDirection != Vector3.Zero)
             {
-                walkDirection.Z = 0;
+                Vector3.Normalize(walkDirection);
             }
-            if (newState.IsKeyUp(Keys.A) && newState.IsKeyUp(Keys.D))
-            {
-                walkDirection.X = 0;
-            }
-
             walkDirection = rotateVectXZ(walkDirection, camRotation);
 
             // Zooms in and out with Q/E keys
