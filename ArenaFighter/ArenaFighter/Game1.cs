@@ -23,6 +23,7 @@ namespace ArenaFighter
         Player player;
         Healthbar playerHealthbar;
         Zombie enemy;
+        Healthbar enemyHealthbar;
         Arena arena;
         Boolean gameOver;
 
@@ -66,6 +67,7 @@ namespace ArenaFighter
             player = new Player(this);
             playerHealthbar = new Healthbar(this, graphicsManager.GraphicsDevice, GameConstants.PLAYER_INITIAL_HEALTH, GameConstants.PLAYER_HEALTHBAR_INITIAL_POSITION);
             enemy = new Zombie(this);
+            enemyHealthbar = new Healthbar(this, graphicsManager.GraphicsDevice, GameConstants.ZOMBIE_INITIAL_HEALTH, new Vector2(graphicsManager.GraphicsDevice.Viewport.Width - GameConstants.ZOMBIE_INITIAL_HEALTH - 10, 10));
             arena = new Arena(this);
             gameOver = false;
 
@@ -135,6 +137,7 @@ namespace ArenaFighter
             enemy.Draw();
             arena.Draw();
             playerHealthbar.Draw(spriteBatch);
+            enemyHealthbar.Draw(spriteBatch);
 
             // Write text to the screen
             spriteBatch.Begin();
