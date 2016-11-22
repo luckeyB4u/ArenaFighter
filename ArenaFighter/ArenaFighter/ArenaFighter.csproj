@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Arena.cs" />
+    <Compile Include="Functions.cs" />
     <Compile Include="Zombie.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameConstants.cs" />

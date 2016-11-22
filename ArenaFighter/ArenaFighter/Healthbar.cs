@@ -58,7 +58,7 @@ namespace ArenaFighter
             // Draws rectangles to depict the healthbar
             spriteBatch.Begin();
             spriteBatch.Draw(healthRect, healthbarLoc, Color.MediumSeaGreen);
-            if(currentHealth != maxHealth)
+            if (currentHealth != maxHealth)
                 spriteBatch.Draw(damageRect, new Vector2(healthbarLoc.X + currentHealth, healthbarLoc.Y), Color.Red);
             spriteBatch.End();
 

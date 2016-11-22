@@ -14,6 +14,7 @@ namespace ArenaFighter
     {
         Vector3 location;
         Vector3 walkDirection;
+        Boolean moving;
         int health;
         Boolean collidingWithEnemy;
 
@@ -43,6 +44,7 @@ namespace ArenaFighter
         {
             location = GameConstants.PLAYER_INITIAL_POSITION;
             walkDirection = Vector3.Zero;
+            moving = false;
             health = GameConstants.PLAYER_INITIAL_HEALTH;
             collidingWithEnemy = false;
 
@@ -83,23 +85,14 @@ namespace ArenaFighter
             return false;
         }
 
-        // Rotates a vector by an angle on the XZ-plane (ground)
-        public Vector3 rotateVectXZ(Vector3 vect, float degrees)
-        {
-            Vector3 result = Vector3.Zero;
-            result.X = vect.X * (float)Math.Cos(degrees) - vect.Z * (float)Math.Sin(degrees);
-            result.Y = vect.Y;
-            result.Z = vect.X * (float)Math.Sin(degrees) + vect.Z * (float)Math.Cos(degrees);
-            return result;
-        }
-
         public void rotateCamera(float distance)
         {
             // Rotates the camera offset vector on the XZ-plane based on how much
             // the mouse moved and the sensitivity
             float degrees = distance * camRotationSensitivity;
-            cameraOffset = rotateVectXZ(cameraOffset, degrees);
+            cameraOffset = Functions.rotateVectXZ(cameraOffset, degrees);
             camRotation += degrees;
+            camRotation = Functions.moduloFloats(camRotation, 2 * (float)(Math.PI));
         }
 
         public void jump()
@@ -153,59 +146,50 @@ namespace ArenaFighter
                 health -= 20;
                 collidingWithEnemy = true;
             }
-            else if(!isCollisionWithEnemy(enemy.getLocation()))
+            else if (!isCollisionWithEnemy(enemy.getLocation()))
             {
                 collidingWithEnemy = false;
             }
 
             KeyboardState newState = Keyboard.GetState();
 
-            //WASD movement on the XZ-plane
+            // WASD movement on the XZ-plane
             walkDirection = Vector3.Zero;
+            moving = false;
             if (newState.IsKeyDown(Keys.W))
             {
                 walkDirection += GameConstants.FORWARD;
-                rotationYAxis = -camRotation;
+                moving = true;
             }
             if (newState.IsKeyDown(Keys.A))
             {
                 walkDirection += GameConstants.LEFT;
-                rotationYAxis = -camRotation + (float)Math.PI / 2;
+                moving = true;
             }
             if (newState.IsKeyDown(Keys.S))
             {
                 walkDirection += GameConstants.BACK;
-                rotationYAxis = -camRotation + (float)Math.PI;
+                moving = true;
             }
             if (newState.IsKeyDown(Keys.D))
             {
                 walkDirection += GameConstants.RIGHT;
-                rotationYAxis = -camRotation - (float)Math.PI / 2;
-            }
-            if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.A))
-            {
-                rotationYAxis = -camRotation + (float)Math.PI / 4;
-            }
-            if (newState.IsKeyDown(Keys.A) && newState.IsKeyDown(Keys.S))
-            {
-                rotationYAxis = -camRotation + (float)Math.PI * 3 / 4;
-            }
-            if (newState.IsKeyDown(Keys.S) && newState.IsKeyDown(Keys.D))
-            {
-                rotationYAxis = -camRotation - (float)Math.PI * 3 / 4;
-            }
-            if (newState.IsKeyDown(Keys.W) && newState.IsKeyDown(Keys.D))
-            {
-                rotationYAxis = -camRotation - (float)Math.PI / 4;
+                moving = true;
             }
 
-            // Normalizes the walk direction vector then rotates it to match
-            // the camera rotation
+            // Adjusts the player orientation, normalizes the walk direction
+            // vector, then rotates it to match the camera rotation
+            if (moving)
+            {
+                float walkRotation = Functions.vectAngleXZ(new Vector3(walkDirection.X, walkDirection.Y, -walkDirection.Z));
+                rotationYAxis = -camRotation + walkRotation - (float)Math.PI / 2;
+                rotationYAxis = Functions.moduloFloats(rotationYAxis, 2 * (float)Math.PI);
+            }
             if (walkDirection != Vector3.Zero)
             {
                 Vector3.Normalize(walkDirection);
             }
-            walkDirection = rotateVectXZ(walkDirection, camRotation);
+            walkDirection = Functions.rotateVectXZ(walkDirection, camRotation);
 
             // Zooms in and out with Q/E keys
             if (newState.IsKeyDown(Keys.Q) && oldState.IsKeyUp(Keys.Q) && zoomCount < 5)
@@ -224,7 +208,6 @@ namespace ArenaFighter
             {
                 jump();
             }
-
             updateJump();
 
             oldState = newState;
