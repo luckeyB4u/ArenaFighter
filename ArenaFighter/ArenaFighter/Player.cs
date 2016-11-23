@@ -49,7 +49,7 @@ namespace ArenaFighter
             collidingWithEnemy = false;
 
             rotationXAxis = 0.0f;
-            rotationYAxis = 0.0f;
+            rotationYAxis = GameConstants.PLAYER_INITIAL_Y_ROTATION;
             rotationZAxis = 0.0f;
 
             isInAir = false;
@@ -68,10 +68,22 @@ namespace ArenaFighter
             zoomCount = 0;
         }
 
+        // Gets player location
+        public Vector3 getLocation()
+        {
+            return location;
+        }
+
         // Gets player health
         public int getHealth()
         {
             return health;
+        }
+
+        // Changes the player health by 'amount'
+        public void changeHealth(int amount)
+        {
+            health += amount;
         }
 
         // Determines if player is inside the enemy's collision bubble
@@ -131,7 +143,7 @@ namespace ArenaFighter
             }
         }
 
-        public void Update(GameTime gameTime, Zombie enemy)
+        public void Update(GameTime gameTime)
         {
             // Moves player if not touching wall
             Vector3 newLoc = location + walkDirection * GameConstants.PLAYER_SPEED;
@@ -141,7 +153,7 @@ namespace ArenaFighter
             }
 
             // Decreases player health if colliding with enemy
-            if (isCollisionWithEnemy(enemy.getLocation()) && !collidingWithEnemy)
+            /*if (isCollisionWithEnemy(enemy.getLocation()) && !collidingWithEnemy)
             {
                 health -= 20;
                 collidingWithEnemy = true;
@@ -149,7 +161,7 @@ namespace ArenaFighter
             else if (!isCollisionWithEnemy(enemy.getLocation()))
             {
                 collidingWithEnemy = false;
-            }
+            }*/
 
             KeyboardState newState = Keyboard.GetState();
 
@@ -182,7 +194,7 @@ namespace ArenaFighter
             if (moving)
             {
                 float walkRotation = Functions.vectAngleXZ(new Vector3(walkDirection.X, walkDirection.Y, -walkDirection.Z));
-                rotationYAxis = -camRotation + walkRotation - (float)Math.PI / 2;
+                rotationYAxis = -camRotation + walkRotation;
                 rotationYAxis = Functions.moduloFloats(rotationYAxis, 2 * (float)Math.PI);
             }
             if (walkDirection != Vector3.Zero)
@@ -229,7 +241,7 @@ namespace ArenaFighter
                     effect.EnableDefaultLighting();
                     effect.World = transforms[mesh.ParentBone.Index]
                         * Matrix.CreateRotationZ(rotationZAxis)
-                        * Matrix.CreateRotationY(rotationYAxis)
+                        * Matrix.CreateRotationY(rotationYAxis - (float)Math.PI / 2)
                         * Matrix.CreateRotationX(rotationXAxis)
                         * Matrix.CreateTranslation(location);
                     game.cameraPosition = location + cameraOffset;

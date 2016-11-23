@@ -14,6 +14,7 @@ namespace ArenaFighter
         Vector3 location;
         Vector3 walkDirection;
         int health;
+        int attackCooldown;
 
         float rotationXAxis; // Rotates on YZ-plane
         float rotationYAxis; // Rotates on XZ-plane (ground)
@@ -28,9 +29,10 @@ namespace ArenaFighter
             location = GameConstants.ZOMBIE_INITIAL_POSITION;
             walkDirection = Vector3.Zero;
             health = GameConstants.ZOMBIE_INITIAL_HEALTH;
+            attackCooldown = 0;
 
             rotationXAxis = 0.0f;
-            rotationYAxis = 0.0f;
+            rotationYAxis = GameConstants.ZOMBIE_INITIAL_Y_ROTATION;
             rotationZAxis = 0.0f;
 
             game = g;
@@ -38,18 +40,25 @@ namespace ArenaFighter
             aspectRatio = g.aspectRatio;
         }
 
-        // Gets zombie's health
-        public int getHealth()
-        {
-            return health;
-        }
-
+        // Gets zombie location
         public Vector3 getLocation()
         {
             return location;
         }
 
-        public void Update(GameTime gameTime)
+        // Gets zombie health
+        public int getHealth()
+        {
+            return health;
+        }
+
+        // Changes the zombie health by 'amount'
+        public void changeHealth(int amount)
+        {
+            health += amount;
+        }
+
+        public void Update(GameTime gameTime, Player player)
         {
             // Moves zombie if not touching wall
             Vector3 newLoc = location + walkDirection * GameConstants.ZOMBIE_SPEED;
@@ -58,7 +67,52 @@ namespace ArenaFighter
                 location = newLoc;
             }
 
-            rotationYAxis += MathHelper.ToRadians(1);
+            if(attackCooldown > 0)
+            {
+                attackCooldown++;
+            }
+            if(attackCooldown == GameConstants.ZOMBIE_ATTACK_COOLDOWN)
+            {
+                attackCooldown = 0;
+            }
+
+            updateAI(player);
+
+            //rotationYAxis += MathHelper.ToRadians(1);
+        }
+
+        public void updateAI(Player player)
+        {
+            Vector3 vect1 = location;
+            Vector3 vect2 = player.getLocation();
+            vect1.Z *= -1;
+            vect2.Z *= -1;
+            Vector3 enemyPlayerVect = vect2 - vect1;
+            float enemyPlayerAngle = Functions.moduloFloats(Functions.vectAngleXZ(enemyPlayerVect) - rotationYAxis, 2 * (float)Math.PI);
+            float enemyPlayerDistance = enemyPlayerVect.Length();
+
+            if(enemyPlayerAngle > GameConstants.ZOMBIE_ROTATION_LENIENCY)
+            {
+                rotationYAxis += GameConstants.ZOMBIE_ROTATION_SPEED;
+            }
+            else if(enemyPlayerAngle < GameConstants.ZOMBIE_ROTATION_LENIENCY)
+            {
+                rotationYAxis -= GameConstants.ZOMBIE_ROTATION_SPEED;
+            }
+
+            if(enemyPlayerDistance > GameConstants.ZOMBIE_ATTACK_DISTANCE)
+            {
+                walkDirection = Functions.rotateVectXZ(GameConstants.RIGHT, -rotationYAxis);
+            }
+            else
+            {
+                walkDirection = Vector3.Zero;
+                if (enemyPlayerAngle <= GameConstants.ZOMBIE_ATTACK_ANGLE & enemyPlayerAngle >= -GameConstants.ZOMBIE_ATTACK_ANGLE & attackCooldown == 0)
+                {
+                    attackCooldown++;
+                    player.changeHealth(-20);
+                }
+            }
         }
 
         public void Draw()
@@ -75,8 +129,9 @@ namespace ArenaFighter
                 foreach (BasicEffect effect in mesh.Effects)
                 {
                     effect.EnableDefaultLighting();
-                    effect.World = transforms[mesh.ParentBone.Index] *
-                        Matrix.CreateRotationY(rotationYAxis)
+                    effect.World = transforms[mesh.ParentBone.Index]
+                        * Matrix.CreateRotationZ(rotationZAxis)
+                        * Matrix.CreateRotationY(rotationYAxis - (float)Math.PI / 2)
                         * Matrix.CreateRotationX(rotationXAxis)
                         * Matrix.CreateTranslation(location);
                     effect.View = Matrix.CreateLookAt(game.cameraPosition,

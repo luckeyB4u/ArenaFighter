@@ -101,10 +101,11 @@ namespace ArenaFighter
             // Main game loop
             if(!gameOver)
             {
-                player.Update(gameTime, enemy);
+                player.Update(gameTime);
                 playerHealthbar.changeHealth(player.getHealth());
 
-                enemy.Update(gameTime);
+                enemy.Update(gameTime, player);
+                //enemy.updateAI(player.getLocation());
 
                 MouseState newState = Mouse.GetState();
                 // Put mouse update code here

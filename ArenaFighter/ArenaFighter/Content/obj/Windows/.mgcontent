@@ -4,10 +4,10 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/SoundFX/jump.mp3</File>
-    <File>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/text.spritefont</File>
-    <File>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/ZombieEnemy.fbx</File>
-    <File>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/roundArena.fbx</File>
-    <File>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/alienPlayer.fbx</File>
+    <File>C:/Users/tharm/Desktop/VideoGame Project/ArenaFighter/ArenaFighter/ArenaFighter/Content/SoundFX/jump.mp3</File>
+    <File>C:/Users/tharm/Desktop/VideoGame Project/ArenaFighter/ArenaFighter/ArenaFighter/Content/text.spritefont</File>
+    <File>C:/Users/tharm/Desktop/VideoGame Project/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/roundArena.fbx</File>
+    <File>C:/Users/tharm/Desktop/VideoGame Project/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/alienPlayer.fbx</File>
+    <File>C:/Users/tharm/Desktop/VideoGame Project/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/zombieEnemy.fbx</File>
   </SourceFiles>
 </SourceFileCollection>

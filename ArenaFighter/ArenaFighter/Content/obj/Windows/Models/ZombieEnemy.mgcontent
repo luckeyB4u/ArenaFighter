@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/ZombieEnemy.fbx</SourceFile>
-  <SourceTime>2016-11-19T01:41:55.2079057-05:00</SourceTime>
-  <DestFile>C:/Users/Corey/Desktop/VideoGame/ArenaFighter/ArenaFighter/ArenaFighter/Content/bin/Windows/Models/ZombieEnemy.xnb</DestFile>
-  <DestTime>2016-11-19T02:08:20.1889057-05:00</DestTime>
+  <SourceFile>C:/Users/tharm/Desktop/VideoGame Project/ArenaFighter/ArenaFighter/ArenaFighter/Content/Models/zombieEnemy.fbx</SourceFile>
+  <SourceTime>2016-11-22T21:36:40.872655-05:00</SourceTime>
+  <DestFile>C:/Users/tharm/Desktop/VideoGame Project/ArenaFighter/ArenaFighter/ArenaFighter/Content/bin/Windows/Models/zombieEnemy.xnb</DestFile>
+  <DestTime>2016-11-22T21:37:38.7473529-05:00</DestTime>
   <Importer>FbxImporter</Importer>
   <ImporterTime>2016-03-30T02:36:08-04:00</ImporterTime>
   <Processor>ModelProcessor</Processor>
